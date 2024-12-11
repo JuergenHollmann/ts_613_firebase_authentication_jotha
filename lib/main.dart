@@ -157,13 +157,10 @@ Aufgabe 1: Firebase Authentication
 √ Erstelle eine neue Flutter-App für die Verwendung von Firebase Authentication.
 √ Erstelle dann ein Firebase-Projekt für diese App.
 √ Verbinde Firebase durch flutterfire configure mit der App und konfiguriere Firebase Auth.
-
 √ Hinweis: Das Einrichten selbst genügt für diese Aufgabe.
 √ Die Implementierung von Login, Registrierung und Weiterleitung in der App ist nicht gefordert.
-
-Pushe deine Änderungen dann auf GitHub und kopiere den Link zu deinem GitHub-Repository in das Antwortfeld.
-
-Deine Antwort:
+√ Pushe deine Änderungen dann auf GitHub und kopiere den Link zu deinem GitHub-Repository in das Antwortfeld.
+√ Deine Antwort: https://github.com/JuergenHollmann/ts_613_firebase_authentication_jotha
 
 Aufgabe 2: Simpler Login
 √ Baue ein Textfeld und zwei Buttons in deine App ein.
