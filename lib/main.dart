@@ -12,64 +12,61 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 final authInstance = FirebaseAuth.instance;
+Stream<User?> get onAuthStateChanged => authInstance.authStateChanges();
 
 class MainApp extends StatefulWidget {
-  MainApp({super.key});
-
-  final authInstance = FirebaseAuth.instance;
+  const MainApp({super.key});
 
   @override
   State<MainApp> createState() => _MainAppState();
 }
 
 class _MainAppState extends State<MainApp> {
+  final authInstance = FirebaseAuth.instance;
+
+  /*--- Login ---*/
+  Future<void> loginUser(String email, String password) async {
+    try {
+      await authInstance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      log("$e");
+    }
+  }
+
+  /*--- Logout ---*/
+  Future<void> logoutUser() async {
+    try {
+      await authInstance.signOut();
+    } catch (e) {
+      log("$e");
+    }
+  }
+
+  String statusText = 'Logge Dich ein mit dem Button "Login"';
+  String email = "JOTHA1964@gmail.com";
+  String password = "12JOT3";
+
   @override
   Widget build(BuildContext context) {
-    // final user = repository.getUser(); // hier gibt es kein repo
-    //const user = "JOTHA1964@gmail.com";
-
     return MaterialApp(
       home: Scaffold(
-        body: 
-        
-        
-        
-        
-        
-        // StreamBuilder(
-        //   stream: authInstance.onAuthStateChanged,
-
-        //   // stream: repository.onAuthStateChanged, //O
-        //   builder: (context, snapshot) {
-        //     // If logged in
-        //     if (snapshot.hasData) {
-        //       // show HomeScreen,
-        //       // return HomeScreen(repository: repository); //O
-        //       const Text("Ja");
-
-        //       // if not logged in
-        //     } else {
-        //       // show Login
-        //       // return LoginScreen(repository: repository); //O
-        //       const Text("Nein");
-        //     }
-        //   },
-
-          Center(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Center(child: Text("Logged in as ${user?.email}")),
-                // const Center(child: Text("Logged in as $user")),
-
-                const Text(
-                  'Der Benutzer ist NICHT eingeloggt',
-                  style: TextStyle(
+                Text(
+                  statusText,
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
@@ -80,10 +77,19 @@ class _MainAppState extends State<MainApp> {
                   onPressed: () {
                     // Einen User mit hardgecodeten Werten einloggen:
                     log("Login wurde angeklickt");
-                    String mail = "JOTHA1964@gmail.com";
-                    log("E-Mail: $mail");
-                    String password = "12JOT3";
-                    log("Passwort: $password");
+                    authInstance.loginUser(email, password);
+                    User? user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      setState(() {
+                        statusText =
+                            ("Dieser Benutzer ist eingeloggt: ${user.email}");
+                      });
+                    } else {
+                      setState(() {
+                        statusText = ("Kein Benutzer eingeloggt.");
+                      });
+                    }
+                    log(authInstance.currentUser.toString());
                   },
                   child: const Text(
                     "Login",
@@ -98,6 +104,18 @@ class _MainAppState extends State<MainApp> {
                 ElevatedButton(
                   onPressed: () {
                     log("Logout wurde angeklickt");
+                    authInstance.logoutUser();
+                    User? user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      setState(() {
+                        statusText =
+                            ("Es ist aktuell KEIN Benutzer eingeloggt ...");
+                      });
+                    } else {
+                      setState(() {
+                        statusText = ("Kein Benutzer eingeloggt.");
+                      });
+                    }
                   },
                   child: const Text(
                     "Logout",
@@ -111,45 +129,15 @@ class _MainAppState extends State<MainApp> {
               ],
             ),
           ),
-
-
-
-
-
-      //   ),
+        ),
       ),
     );
   }
 }
 
-// extension on FirebaseAuth {
-//   get onAuthStateChanged => null;
-// }
-
-/*--- Login ---*/
-Future<void> loginUser(String email, String password) async {
-  try {
-    log("1 ---> E-Mail: $email");
-
-    await authInstance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-      //log("$user");
-      //Text("Logged in as $user")),
-    );
-  } catch (e) {
-    log("$e");
-  }
-  log("2 ---> E-Mail: $email");
-}
-
-/*--- Logout ---*/
-Future<void> logoutUser() async {
-  try {
-    await authInstance.signOut();
-  } catch (e) {
-    log("$e");
-  }
+extension on FirebaseAuth {
+  void loginUser(String email, String password) {}
+  void logoutUser() {}
 }
 
 /*
@@ -164,10 +152,8 @@ Aufgabe 1: Firebase Authentication
 
 Aufgabe 2: Simpler Login
 √ Baue ein Textfeld und zwei Buttons in deine App ein.
-Wenn auf den einen Button geklickt wird, dann soll ein User mit hardgekodeten Werten eingeloggt werden.
-Es soll im Textfeld angezeigt werden, dass der Benutzer eingeloggt ist.
-Der andere Button soll ausloggen.
-
-Wie sieht deine App und dein Code aus? Kopiere den Code und einen Screenshot in das Antwortfeld.
-
+√ Wenn auf den einen Button geklickt wird, dann soll ein User mit hardgekodeten Werten eingeloggt werden.
+√ Es soll im Textfeld angezeigt werden, dass der Benutzer eingeloggt ist.
+√ Der andere Button soll ausloggen.
+√ Wie sieht deine App und dein Code aus? Kopiere den Code und einen Screenshot in das Antwortfeld.
 */
